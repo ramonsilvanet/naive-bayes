@@ -1,29 +1,42 @@
-
+library(plyr)
 
 classificar = function(input_age, input_income, input_student, input_credit_rating, dataset_treinamento){
   #Criando as tabelas de frequencia
 
   #idade
-  ages = table(dataset_treinamento$age)
-  ages.freq = prop.table(ages)
-  
+  per_age <- table(dataset_treinamento$age, dataset_treinamento$Class.buys_computer)
+
   #ganhos
-  incomes = table(dataset_treinamento$income)
-  incomes.freq = prop.table(incomes)
+  per_income <- table(dataset_treinamento$income, dataset_treinamento$Class.buys_computer)
   
   #estudante ?
-  student = table(dataset_treinamento$student)
-  student.freq = prop.table(student)
+  per_student <- table(dataset_treinamento$student, dataset_treinamento$Class.buys_computer)
 
-  
   #nota de crédito
-  credit_rating <- table(dataset_treinamento$credit_rating)
-  credit_rating.freq = prop.table(credit_rating)
+  per_credit_rating <- table(dataset_treinamento$credit_rating, dataset_treinamento$Class.buys_computer)
 
-  buys_computer <- ages.freq[[input_age]] * incomes.freq[[input_income]] * student.freq[[input_student]] * credit_rating.freq[[input_credit_rating]]
+  class_buy <- table(dataset_treinamento$Class.buys_computer)
+  class_buy.freq = prop.table(class_buy)
   
-  print( incomes.freq[[input_income]] )
-}
+  freq_yes = class_buy.freq[["yes"]]
+
+  freq_yes_age = per_age[input_age, "yes"] / sum(per_age)
+  freq_yes_income = per_income[input_income, "yes"] / sum(per_income)
+  freq_yes_student = per_student[input_student, "yes"] / sum(per_student)
+  freq_yes_credit_rating = per_credit_rating[input_credit_rating, "yes"] / sum(per_credit_rating)
+  
+  buy = (freq_yes_age * freq_yes_income * freq_yes_student * freq_yes_credit_rating) * freq_yes
+  
+  if(buy > 0.5){
+    classification = "yes"
+  } else {
+    classification = "no"
+  }
+  
+  result <- c(input_age, input_income, input_student, input_credit_rating, classification)
+  
+  print(buy)
+ }
 
 ler_dados_entrada = function(){
   input_age = readline("Entre com a faixa etária : (youth, Middle Aged ou Senior) \n")
