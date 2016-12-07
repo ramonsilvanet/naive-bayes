@@ -57,13 +57,21 @@ classificar = function(input_age, input_income, input_student, input_credit_rati
 }
 
 ler_dados_entrada = function(){
-  input_age = readline("Entre com a faixa etária : (youth, Middle Aged ou Senior) \n")
+  input_age = readline("Entre com a faixa etária : (youth, middle aged ou senior) \n")
+  check_age <- c("youth", "middle aged", "senior")
+  if (!input_age %in% check_age) stop("Invalid 'age' value")
   
   input_income = readline("Entre com a faixa salarial (low, medium, high) \n ")
+  check_income <- c("low", "medium", "high")
+  if (!input_income %in% check_income) stop("Invalid 'income' value")
   
   input_student = readline("Estudante ? : (yes, no) \n ")
+  check_student <- c("yes", "no")
+  if (!input_student %in% check_student) stop("Invalid 'student' value")
   
   input_credit_rating = readline("Qual a nota de credito ? (fair, excellent) \n")
+  check_credit_rating <- c("fair", "excellent")
+  if (!input_credit_rating %in% check_credit_rating) stop("Invalid 'credit rating' value")
   
   dataset = read.csv("dataset.csv", header = TRUE, sep = ",", quote = "\"", dec = ".", fill = TRUE, comment.char = "")
   
